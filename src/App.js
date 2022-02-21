@@ -2,22 +2,43 @@ import { useEffect, useState } from 'react'
 import { DfkHeroCard, buildAPIHero, getApiHero, DfkHeroSprite } from './entry'
 
 function App() {
-  const [hero, setHero] = useState(null)
-  const [flip, setFlip] = useState(false)
+    const [hero, setHero] = useState(null)
+    const [heroId, setHeroId] = useState(14)
+    const [flip, setFlip] = useState(false)
 
-  useEffect(async () => {
-    const getData = async () => {
-      const apiHero = await getApiHero('14')
-      console.log(apiHero)
-      setHero(apiHero)
-    }
-    getData()
-  }, [])
-  return (
-    <div onClick={() => setFlip(!flip)}>
-      {hero && <DfkHeroCard hero={hero} isFlipped={flip} animated={true} />}
-    </div>
-  )
+    useEffect(async () => {
+        const getData = async () => {
+            const apiHero = await getApiHero(heroId)
+            console.log(apiHero)
+            setHero(apiHero)
+        }
+        getData()
+    }, [heroId])
+    return (
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        >
+            <div onClick={() => setFlip(!flip)}>
+                {hero && <DfkHeroCard hero={hero} isFlipped={flip} isAnimated={true} />}
+            </div>
+            <div style={{ justifyContent: 'center' }}>
+                <h1>Type Hero ID to display</h1>
+                <input
+                    value={heroId}
+                    onChange={(e) => setHeroId(e.target.value)}
+                    style={{ width: 200 }}
+                />
+            </div>
+            <div>{hero && <DfkHeroSprite hero={hero} />}</div>
+            <div>{hero.name}'s strength is {hero.stats.strength}<br />
+                {hero.visualGenes.gender === 'female' ? 'She' : 'He'} is a {hero.statGenes.class} and a {hero.statGenes.subClass}.<br />
+            </div>
+            </div>
+    )
 }
 
 export default App
